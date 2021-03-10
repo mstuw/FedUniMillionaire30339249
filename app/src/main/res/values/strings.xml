@@ -3,8 +3,9 @@
     <string name="game_title">Who Wants to be a Millionaire?</string>
     <string name="btn_start_game">Start Game</string>
     <string name="btnConfirm">Confirm</string>
-    <string name="question_format">In the UK, the abbreviation NHS stands for National what Service</string>
-    <string name="question_progress_format">Question: 3 of 11</string>
-    <string name="question_playing_for_format">Playing for $100,000</string>
-    <string name="safe_money_format">You have $32,000</string>
+    <string name="question_format">%1$s</string>
+    <string name="question_choice_format">%1$s</string>
+    <string name="question_progress_format">Question: %1$d of %2$d</string>
+    <string name="question_playing_for_format">Playing for $%1$,.0f</string>
+    <string name="safe_money_format">You have $%1$,.0f</string>
 </resources>

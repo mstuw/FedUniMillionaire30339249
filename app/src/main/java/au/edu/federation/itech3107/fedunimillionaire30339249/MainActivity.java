@@ -1,6 +1,8 @@
 package au.edu.federation.itech3107.fedunimillionaire30339249;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,4 +13,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
+
+
+    /**
+     * Called when the "Start Game" button is clicked. Starts the {@link QuestionActivity}.
+     */
+    public void btnStartGameClicked(View view) {
+        Intent intent = new Intent(this, QuestionActivity.class);
+        startActivity(intent);
+    }
+
 }

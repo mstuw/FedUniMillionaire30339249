@@ -9,8 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FedUniMillionaire30339249">
-        <activity android:name=".GameEndActivity" android:screenOrientation="portrait" />
-        <activity android:name=".QuestionActivity" android:screenOrientation="portrait" />
+        <activity android:name=".GameEndActivity" android:screenOrientation="portrait" android:parentActivityName=".MainActivity" />
+        <activity android:name=".QuestionActivity" android:screenOrientation="portrait" android:parentActivityName=".MainActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

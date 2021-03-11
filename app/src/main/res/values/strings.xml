@@ -3,9 +3,17 @@
     <string name="game_title">Who Wants to be a Millionaire?</string>
     <string name="btn_start_game">Start Game</string>
     <string name="btnConfirm">Confirm</string>
+    <string name="btnReturn">Return to Menu</string>
     <string name="question_format">%1$s</string>
     <string name="question_choice_format">%1$s</string>
     <string name="question_progress_format">Question: %1$d of %2$d</string>
     <string name="question_playing_for_format">Playing for $%1$,.0f</string>
     <string name="safe_money_format">You have $%1$,.0f</string>
+    <string name="game_end_win">Congratulations!</string>
+    <string name="game_end_lose">Better Luck Next Time!</string>
+    <string name="game_end_format">You have won $%1$,.0f</string>
+    <string name="game_end_lose_format">You didn\'t win anything.</string>
+    <string name="game_end_stats_format">You answered %1$d of the %2$d questions correctly.</string>
+    <string name="img_desc_bronze_medal">A clip art bronze medal.</string>
+    <string name="img_desc_trophy">A clip art gold medal.</string>
 </resources>

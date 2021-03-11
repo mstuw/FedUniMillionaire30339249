@@ -25,6 +25,7 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
 
     private double currentSafeMoney;
 
+    // Views
     private Button btnConfirm;
     private TextView txtQuestion;
     private TextView txtPlayingFor;
@@ -60,7 +61,7 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
         updateView();
     }
 
-    // Updates views to reflect the member variables.
+    /** Update views to reflect member variables. */
     private void updateView() {
         txtQuestion.setText(getString(R.string.question_format, currentQuestion.getQuestion()));
         txtPlayingFor.setText(getString(R.string.question_playing_for_format, currentQuestion.getValue()));
@@ -87,6 +88,12 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
         if (currentQuestion.getCorrectChoice() == (int) checkedAnswer.getTag()) { // Answer was correct.
             if (currentQuestion.isSafeMoney())
                 currentSafeMoney = currentQuestion.getValue();
+
+        } else { // Answer was incorrect.
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            return;
+
         }
 
         Intent intent = new Intent(getApplicationContext(), QuestionActivity.class);

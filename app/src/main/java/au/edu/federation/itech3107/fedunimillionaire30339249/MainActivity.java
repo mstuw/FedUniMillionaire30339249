@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    // A list of sample questions.
     private static final ArrayList<Question> questions = new ArrayList<Question>() {{
         add(new Question(1000, true, "In the UK, the abbreviation NHS stands for National what Service?", 1, "Humanity", "Health", "Honour", "Household"));
         add(new Question(2000, false, "Which Disney character famously leaves a glass slipper behind at a royal ball?", 2, "Pocahontas", "Sleeping Beauty", "Cinderella", "Elsa"));
@@ -28,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
     }
 
 

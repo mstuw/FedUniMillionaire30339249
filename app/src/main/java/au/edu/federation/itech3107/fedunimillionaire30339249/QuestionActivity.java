@@ -109,6 +109,8 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
             } else {
                 // Next question...
                 Intent intent = new Intent(this, QuestionActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
                 intent.putParcelableArrayListExtra(EXTRA_QUESTIONS, questions);
                 intent.putExtra(EXTRA_CURRENT_QUESTION, currentQuestionIndex + 1);
                 intent.putExtra(EXTRA_SAFE_MONEY, currentSafeMoney);
@@ -132,6 +134,8 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
     /** Starts the {@link GameEndActivity} with the required extras needed. Can be used for both winning and losing states. */
     private void endGame() {
         Intent intent = new Intent(this, GameEndActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
         intent.putExtra(GameEndActivity.EXTRA_WINNINGS_AMOUNT, currentSafeMoney);
         intent.putExtra(GameEndActivity.EXTRA_TOTAL_QUESTIONS, questions.size());
         intent.putExtra(GameEndActivity.EXTRA_TOTAL_CORRECT, questionsAnsweredCorrectly);

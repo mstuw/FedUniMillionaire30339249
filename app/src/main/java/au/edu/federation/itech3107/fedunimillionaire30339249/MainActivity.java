@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
      */
     public void btnStartGameClicked(View view) {
         Intent intent = new Intent(this, QuestionActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
         intent.putParcelableArrayListExtra(QuestionActivity.EXTRA_QUESTIONS, questions);
         intent.putExtra(QuestionActivity.EXTRA_CURRENT_QUESTION, 0);
 

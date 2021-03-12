@@ -1,0 +1,5 @@
+The following assets have been used in this project.
+
+Images / Icons:
+    - https://www.flaticon.com/free-icon/trophy_1017451 (drawable/ic_trophy.xml)
+    - https://www.flaticon.com/free-icon/bronze-medal_179250 (drawable/ic_bronze_medal.xml)

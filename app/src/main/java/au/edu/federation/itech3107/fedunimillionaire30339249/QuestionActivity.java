@@ -2,7 +2,6 @@ package au.edu.federation.itech3107.fedunimillionaire30339249;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
+import au.edu.federation.itech3107.fedunimillionaire30339249.data.GameQuestion;
+import au.edu.federation.itech3107.fedunimillionaire30339249.data.Question;
+
 public class QuestionActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
 
     public static final String EXTRA_QUESTIONS = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_QUESTIONS";
@@ -22,7 +24,7 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
     public static final String EXTRA_SAFE_MONEY = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_SAFE_MONEY";
     public static final String EXTRA_QUESTIONS_ANSWERED_CORRECTLY = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_QUESTIONS_ANSWERED_CORRECTLY";
 
-    private ArrayList<Question> questions;
+    private ArrayList<GameQuestion> questions;
     private int currentQuestionIndex; // The current question index (zero-based).
     private int questionsAnsweredCorrectly; // The number of questions answered correctly.
 
@@ -96,7 +98,7 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
     public void btnConfirmClicked(View view) {
         RadioButton checkedAnswer = findViewById(rgChoices.getCheckedRadioButtonId());
 
-        Question question = getCurrentQuestion();
+        GameQuestion question = getCurrentQuestion();
 
         if (question.getCorrectChoice() == (int) checkedAnswer.getTag()) { // Answer was correct.
             questionsAnsweredCorrectly++;
@@ -127,7 +129,7 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
     }
 
     /** @return The current question this activity should be displaying / handling. */
-    private Question getCurrentQuestion() {
+    private GameQuestion getCurrentQuestion() {
         return questions.get(currentQuestionIndex);
     }
 

@@ -2,16 +2,28 @@ package au.edu.federation.itech3107.fedunimillionaire30339249;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
+import org.json.JSONException;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.List;
+
+import au.edu.federation.itech3107.fedunimillionaire30339249.data.Difficulty;
+import au.edu.federation.itech3107.fedunimillionaire30339249.data.GameQuestion;
+import au.edu.federation.itech3107.fedunimillionaire30339249.data.Question;
+import au.edu.federation.itech3107.fedunimillionaire30339249.data.QuestionManager;
 
 public class MainActivity extends AppCompatActivity {
 
     // A list of sample questions.
-    private static final ArrayList<Question> questions = new ArrayList<Question>() {{
+ /*   private static final ArrayList<Question> questions = new ArrayList<Question>() {{
         add(new Question(1000, true, "In the UK, the abbreviation NHS stands for National what Service?", 1, "Humanity", "Health", "Honour", "Household"));
         add(new Question(2000, false, "Which Disney character famously leaves a glass slipper behind at a royal ball?", 2, "Pocahontas", "Sleeping Beauty", "Cinderella", "Elsa"));
         add(new Question(4000, false, "What name is given to the revolving belt machinery in an airport that delivers checked luggage from the plane to baggage reclaim?", 3, "Hangar", "Terminal", "Concourse", "Carousel"));
@@ -23,12 +35,44 @@ public class MainActivity extends AppCompatActivity {
         add(new Question(250000, false, "In Doctor Who, what was the signature look of the fourth Doctor, as portrayed by Tom Baker?", 1, "Bow-tie, braces, and tweed jacket", "Wide-brimmed hat and extra long scarf", "Pinstripe suit and trainers", "Cape, velvet jacket and frilly shirt"));
         add(new Question(500000, false, "Construction of which of these famous landmarks was completed first?", 3, "Empire State Building", "Royal Albert Hall", "Eiffel Tower", "Big Ben Clock Tower"));
         add(new Question(1000000, true, "In 1718, which pirate died in battle off the coast of what is now North Carolina?", 1, "Calico Jack", "Blackbeard", "Bartholomew Roberts", "Captain Kid"));
-    }};
+    }};*/
+
+    private final QuestionManager questionManager = new QuestionManager();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Load questions for each difficulty level.
+        questionManager.clearQuestions();
+        try {
+            questionManager.loadQuestions(readAllText("questions-easy.json"));
+            questionManager.loadQuestions(readAllText("questions-medium.json"));
+            questionManager.loadQuestions(readAllText("questions-hard.json"));
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Defines the difficulty level the question manager will generate questions at.
+        questionManager.clearDifficultySeq();
+        questionManager.appendDifficultySeq(5, Difficulty.EASY); // The first 5 questions will be easy.
+        questionManager.appendDifficultySeq(4, Difficulty.MEDIUM); // The next 4 questions will be medium.
+        questionManager.appendDifficultySeq(2, Difficulty.HARD); // The next 2 questions will be hard (including any additional questions over 11).
+
+        // Make questions 1, 6, and 11 safe money.
+        questionManager.setSafeMoneyQuestions(true, 0, 5, 10);
+
+
+        // TEMP - Testing...
+        List<GameQuestion> questions = questionManager.createNextQuestionSet(11);
+
+        for (int i = 0; i < questions.size(); i++) {
+            GameQuestion q = questions.get(i);
+            Log.d("MainActivity", (i + 1) + ": " + q.getDifficulty() + " - " + q.isSafeMoney() + ": " + q.getQuestionText());
+        }
+
     }
 
 
@@ -39,10 +83,25 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, QuestionActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
-        intent.putParcelableArrayListExtra(QuestionActivity.EXTRA_QUESTIONS, questions);
-        intent.putExtra(QuestionActivity.EXTRA_CURRENT_QUESTION, 0);
+        //intent.putParcelableArrayListExtra(QuestionActivity.EXTRA_QUESTIONS, questions);
+        //intent.putExtra(QuestionActivity.EXTRA_CURRENT_QUESTION, 0);
 
         startActivity(intent);
+    }
+
+    public String readAllText(String filepath) throws IOException {
+        return readAllText(getAssets().open(filepath));
+    }
+
+    public static String readAllText(InputStream inputStream) throws IOException {
+        // Read the file into a string.
+        StringBuilder sb = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+            String line;
+            while ((line = br.readLine()) != null)
+                sb.append(line).append('\n');
+        }
+        return sb.toString();
     }
 
 }

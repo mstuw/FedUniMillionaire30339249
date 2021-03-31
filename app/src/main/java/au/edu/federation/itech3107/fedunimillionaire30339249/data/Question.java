@@ -9,6 +9,7 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This class represents a multiple-choice question.
@@ -98,6 +99,21 @@ public class Question {
      */
     public List<Answer> getAnswers() {
         return answers;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Question question = (Question) o;
+        return getDifficulty() == question.getDifficulty() &&
+                Objects.equals(getQuestionText(), question.getQuestionText()) &&
+                Objects.equals(getAnswers(), question.getAnswers());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getDifficulty(), getQuestionText(), getAnswers());
     }
 
 }

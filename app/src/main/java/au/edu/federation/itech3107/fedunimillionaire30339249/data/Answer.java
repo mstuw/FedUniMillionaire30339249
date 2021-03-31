@@ -3,6 +3,8 @@ package au.edu.federation.itech3107.fedunimillionaire30339249.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Objects;
+
 /**
  * This class represents an answer to a question that can be either correct or incorrect. It implements {@link Parcelable} allowing it to be used as an extra for Intents.
  */
@@ -50,6 +52,19 @@ public class Answer implements Parcelable {
 
     public boolean isCorrect() {
         return isCorrect;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Answer answer = (Answer) o;
+        return isCorrect() == answer.isCorrect() && Objects.equals(getText(), answer.getText());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getText(), isCorrect());
     }
 
 }

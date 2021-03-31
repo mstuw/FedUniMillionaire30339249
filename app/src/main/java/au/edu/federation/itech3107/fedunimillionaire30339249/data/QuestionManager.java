@@ -6,23 +6,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Array;
-import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 public class QuestionManager {
@@ -94,6 +82,7 @@ public class QuestionManager {
 
     /**
      * Load questions from a JSON string. Calls {@link #addQuestion(Question)} for each question parsed. See "questions-easy.json" for schema details.
+     *
      * @param json the json text.
      * @throws JSONException if an exception occurs when parsing the JSON string.
      */
@@ -111,7 +100,8 @@ public class QuestionManager {
 
     /**
      * Sets what questions are considered "safe money". The specified indices array is zero-based.
-     * @param isSafe if true the provided indices as safe, false otherwise.
+     *
+     * @param isSafe  if true the provided indices as safe, false otherwise.
      * @param indices the array of question indices (zero-based).
      */
     public void setSafeMoneyQuestions(boolean isSafe, int... indices) {
@@ -136,7 +126,7 @@ public class QuestionManager {
     }
 
     /**
-     * Returns a list of questions (limited to the specified count) and that follows the difficulty sequence defined in this {@link QuestionManager}
+     * Returns a set of questions (limited to the specified count) and that follows the difficulty sequence defined in this {@link QuestionManager}
      *
      * @param count The number of questions to return.
      * @return an {@link ArrayList} of questions, or an empty {@link ArrayList} if no difficulty sequence was defined. See {@link QuestionManager#appendDifficultySeq(int, Difficulty)}
@@ -156,10 +146,6 @@ public class QuestionManager {
             // Get all the questions of a current difficulty.
             List<Question> questionsOfDifficulty = questions.get(level.difficulty);
 
-            // Add a random question of the current difficulty to the question list.
-            int index = (int) (Math.random() * questionsOfDifficulty.size()); // TODO: Prevent duplicate questions appearing in question "set".
-
-            Question q = questionsOfDifficulty.get(index);
             boolean isSafe = safeMoneyIndices.contains(i);
 
             // Get the question value, if the explicit question value isn't defined use the last value.
@@ -167,7 +153,21 @@ public class QuestionManager {
             if (!questionValues.isEmpty())
                 value = questionValues.get(Math.min(i, questionValues.size() - 1));
 
-            questionList.add(new GameQuestion(q, value, isSafe));
+            // Attempt to add a unique random question to this set.
+            for (int attempts = 0; attempts < questionsOfDifficulty.size() * 10; attempts++) {
+
+                // Add a random question of the current difficulty to the question list.
+                int index = (int) (Math.random() * questionsOfDifficulty.size());
+                Question q = questionsOfDifficulty.get(index);
+
+                GameQuestion gameQuestion = new GameQuestion(q, value, isSafe);
+                if (!questionList.contains(gameQuestion)) {
+                    questionList.add(gameQuestion);
+                    break;
+                }
+
+            }
+
 
             questionsOfCurrentDifficulty++;
 

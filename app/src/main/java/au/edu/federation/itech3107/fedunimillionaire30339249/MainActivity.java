@@ -25,7 +25,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "MainActivity";
 
-    /** The number of questions in a game */
+    /**
+     * The number of questions in a game
+     */
     public static final int GAME_QUESTION_COUNT = 11;
 
     private final QuestionManager questionManager = new QuestionManager();
@@ -90,12 +92,25 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     * Returns all text from the specified asset file.
+     *
+     * @param filepath the asset filepath. See {@link android.content.res.AssetManager#open(String) AssetManager.open(String)}
+     * @return all text from the specified asset file.
+     * @throws IOException an IO exception occurred.
+     */
     public String readAllText(String filepath) throws IOException {
         return readAllText(getAssets().open(filepath));
     }
 
+    /**
+     * Reads all text from the specified {@link InputStream} and returns a String.
+     *
+     * @param inputStream the {@link InputStream} to read.
+     * @return a string containing all text from the specified {@link InputStream}.
+     * @throws IOException an IO exception occurred.
+     */
     public static String readAllText(InputStream inputStream) throws IOException {
-        // Read the file into a string.
         StringBuilder sb = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;

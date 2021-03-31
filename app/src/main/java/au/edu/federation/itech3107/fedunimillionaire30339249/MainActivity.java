@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
      * The number of questions in a game
      */
     public static final int GAME_QUESTION_COUNT = 11;
+    public static final int GAME_HOT_SEAT_TIMER = 15000;
 
     private final QuestionManager questionManager = new QuestionManager();
 
@@ -65,7 +66,23 @@ public class MainActivity extends AppCompatActivity {
      * Called when the "Start Game" button is clicked. Starts the {@link QuestionActivity}.
      */
     public void btnStartGameClicked(View view) {
-        ArrayList<GameQuestion> questions = (ArrayList<GameQuestion>) questionManager.createNextQuestionSet(GAME_QUESTION_COUNT);
+        Intent intent = createGameActivity(GAME_QUESTION_COUNT);
+        startActivity(intent);
+    }
+
+    /**
+     * Called when the "Hot Seat" button is clicked. Starts the {@link QuestionActivity} with a countdown timer.
+     */
+    public void btnHotSeatClicked(View view) {
+        Intent intent = createGameActivity(GAME_QUESTION_COUNT);
+
+        intent.putExtra(QuestionActivity.EXTRA_GAME_TIMER, GAME_HOT_SEAT_TIMER);
+
+        startActivity(intent);
+    }
+
+    private Intent createGameActivity(int questionCount) {
+        ArrayList<GameQuestion> questions = (ArrayList<GameQuestion>) questionManager.createNextQuestionSet(questionCount);
 
 
         // TODO: Temp - Log info about the question set.
@@ -89,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putParcelableArrayListExtra(QuestionActivity.EXTRA_QUESTIONS, questions);
         intent.putExtra(QuestionActivity.EXTRA_CURRENT_QUESTION, 0);
 
-        startActivity(intent);
+        return intent;
     }
 
     /**

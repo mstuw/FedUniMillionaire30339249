@@ -2,6 +2,7 @@ package au.edu.federation.itech3107.fedunimillionaire30339249;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -17,19 +18,23 @@ import java.util.ArrayList;
 
 import au.edu.federation.itech3107.fedunimillionaire30339249.data.Answer;
 import au.edu.federation.itech3107.fedunimillionaire30339249.data.GameQuestion;
-import au.edu.federation.itech3107.fedunimillionaire30339249.data.Question;
 
 public class QuestionActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
+
+    public static final String TAG = "QuestionActivity";
 
     public static final String EXTRA_QUESTIONS = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_QUESTIONS";
     public static final String EXTRA_CURRENT_QUESTION = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_CURRENT_QUESTION";
     public static final String EXTRA_SAFE_MONEY = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_SAFE_MONEY";
     public static final String EXTRA_QUESTIONS_ANSWERED_CORRECTLY = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_QUESTIONS_ANSWERED_CORRECTLY";
+    public static final String EXTRA_GAME_TIMER = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_GAME_TIMER";
+
+    private CountDownTimer timer;
 
     private ArrayList<GameQuestion> questions;
     private int currentQuestionIndex; // The current question index (zero-based).
     private int questionsAnsweredCorrectly; // The number of questions answered correctly.
-
+    private int initialCountdownTime; // The number of milliseconds until the game will end. Zero if disabled.
     private double currentSafeMoney; // The amount of money the user has already won.
 
     // Views
@@ -64,7 +69,44 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
         currentSafeMoney = intent.getDoubleExtra(EXTRA_SAFE_MONEY, 0);
         questionsAnsweredCorrectly = intent.getIntExtra(EXTRA_QUESTIONS_ANSWERED_CORRECTLY, 0);
 
+
+        ProgressBar countdownProgressBar = findViewById(R.id.progressBarCountdown);
+
+        // Hot seat mode enabled, init count down timer.
+        if (intent.hasExtra(EXTRA_GAME_TIMER)) {
+            initialCountdownTime = intent.getIntExtra(EXTRA_GAME_TIMER, 15000);
+
+            countdownProgressBar.setVisibility(View.VISIBLE);
+            countdownProgressBar.setMax(initialCountdownTime);
+
+            timer = new CountDownTimer(initialCountdownTime, 40) {
+                public void onTick(long millisUntilFinished) {
+                    countdownProgressBar.setProgress((int) (initialCountdownTime - millisUntilFinished));
+                }
+
+                public void onFinish() {
+                    Log.d(TAG, "Countdown finished - endGame()");
+                    endGame();
+                }
+
+            };
+            timer.start();
+
+        } else { // Hot seat mode disabled.
+            initialCountdownTime = 0; // Explicitly set zero, ensuring value doesn't get passed as an extra.
+            countdownProgressBar.setVisibility(View.INVISIBLE);
+        }
+
         updateView();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (timer != null) {
+            timer.cancel();
+            Log.d(TAG, "Stopping countdown timer...");
+        }
     }
 
     /**
@@ -100,6 +142,9 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
     }
 
     public void btnConfirmClicked(View view) {
+        if (timer != null)
+            timer.cancel();
+
         RadioButton checkedAnswer = findViewById(rgChoices.getCheckedRadioButtonId());
         int checkedIndex = (int) checkedAnswer.getTag();
 
@@ -122,6 +167,9 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
                 intent.putExtra(EXTRA_CURRENT_QUESTION, currentQuestionIndex + 1);
                 intent.putExtra(EXTRA_SAFE_MONEY, currentSafeMoney);
                 intent.putExtra(EXTRA_QUESTIONS_ANSWERED_CORRECTLY, questionsAnsweredCorrectly);
+
+                if (initialCountdownTime > 0)
+                    intent.putExtra(EXTRA_GAME_TIMER, initialCountdownTime);
 
                 startActivity(intent);
 

@@ -2,6 +2,7 @@ package au.edu.federation.itech3107.fedunimillionaire30339249;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
+import au.edu.federation.itech3107.fedunimillionaire30339249.data.Answer;
 import au.edu.federation.itech3107.fedunimillionaire30339249.data.GameQuestion;
 import au.edu.federation.itech3107.fedunimillionaire30339249.data.Question;
 
@@ -69,9 +71,9 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
      * Update views to reflect member variables.
      */
     private void updateView() {
-        Question question = getCurrentQuestion();
+        GameQuestion question = getCurrentQuestion();
 
-        txtQuestion.setText(getString(R.string.question_format, question.getQuestion()));
+        txtQuestion.setText(getString(R.string.question_format, question.getQuestionText()));
         txtPlayingFor.setText(getString(R.string.question_playing_for_format, question.getValue()));
         txtSafeMoney.setText(getString(R.string.safe_money_format, currentSafeMoney));
 
@@ -82,13 +84,15 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
 
         // Update question answers.
         rgChoices.removeAllViews();
-        for (int index = 0; index < question.getChoices().length; index++) {
+        for (int index = 0; index < question.getAnswers().size(); index++) {
+            Answer answer = question.getAnswers().get(index);
+
             RadioButton btn = new RadioButton(getApplicationContext());
 
             btn.setTag(index);
             btn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
             btn.setTextColor(getResources().getColor(R.color.black, getTheme()));
-            btn.setText(getString(R.string.question_choice_format, question.getChoices()[index]));
+            btn.setText(getString(R.string.question_choice_format, answer.getText()));
 
             rgChoices.addView(btn);
         }
@@ -97,10 +101,11 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
 
     public void btnConfirmClicked(View view) {
         RadioButton checkedAnswer = findViewById(rgChoices.getCheckedRadioButtonId());
+        int checkedIndex = (int) checkedAnswer.getTag();
 
         GameQuestion question = getCurrentQuestion();
 
-        if (question.getCorrectChoice() == (int) checkedAnswer.getTag()) { // Answer was correct.
+        if (question.getAnswers().get(checkedIndex).isCorrect()) { // Answer was correct.
             questionsAnsweredCorrectly++;
 
             if (question.isSafeMoney())
@@ -128,12 +133,16 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
 
     }
 
-    /** @return The current question this activity should be displaying / handling. */
+    /**
+     * @return The current question this activity should be displaying / handling.
+     */
     private GameQuestion getCurrentQuestion() {
         return questions.get(currentQuestionIndex);
     }
 
-    /** Starts the {@link GameEndActivity} with the required extras needed. Can be used for both winning and losing states. */
+    /**
+     * Starts the {@link GameEndActivity} with the required extras needed. Can be used for both winning and losing states.
+     */
     private void endGame() {
         Intent intent = new Intent(this, GameEndActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);

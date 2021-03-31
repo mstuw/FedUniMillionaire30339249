@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import au.edu.federation.itech3107.fedunimillionaire30339249.data.Difficulty;
@@ -22,23 +23,12 @@ import au.edu.federation.itech3107.fedunimillionaire30339249.data.QuestionManage
 
 public class MainActivity extends AppCompatActivity {
 
-    // A list of sample questions.
- /*   private static final ArrayList<Question> questions = new ArrayList<Question>() {{
-        add(new Question(1000, true, "In the UK, the abbreviation NHS stands for National what Service?", 1, "Humanity", "Health", "Honour", "Household"));
-        add(new Question(2000, false, "Which Disney character famously leaves a glass slipper behind at a royal ball?", 2, "Pocahontas", "Sleeping Beauty", "Cinderella", "Elsa"));
-        add(new Question(4000, false, "What name is given to the revolving belt machinery in an airport that delivers checked luggage from the plane to baggage reclaim?", 3, "Hangar", "Terminal", "Concourse", "Carousel"));
-        add(new Question(8000, false, "Which of these brands was chiefly associated with the manufacture of household locks?", 2, "Phillips", "Flymo", "Chubb", "Ronseal"));
-        add(new Question(16000, false, "The hammer and sickle is one of the most recognisable symbols of which political ideology?", 1, "Republicanism", "Communism", "Conservatism", "Liberalism"));
-        add(new Question(32000, true, "Which toys have been marketed with the phrase “robots in disguise”?", 3, "Bratz Dolls", "Sylvanian Families", "Hatchimals", "Transformers"));
-        add(new Question(64000, false, "What does the word loquacious mean?", 1, "Angry", "Chatty", "Beautiful", "Shy"));
-        add(new Question(125000, false, "Obstetrics is a branch of medicine particularly concerned with what?", 0, "Childbirth", "Broken Bones", "Heart Conditions", "Old Age"));
-        add(new Question(250000, false, "In Doctor Who, what was the signature look of the fourth Doctor, as portrayed by Tom Baker?", 1, "Bow-tie, braces, and tweed jacket", "Wide-brimmed hat and extra long scarf", "Pinstripe suit and trainers", "Cape, velvet jacket and frilly shirt"));
-        add(new Question(500000, false, "Construction of which of these famous landmarks was completed first?", 3, "Empire State Building", "Royal Albert Hall", "Eiffel Tower", "Big Ben Clock Tower"));
-        add(new Question(1000000, true, "In 1718, which pirate died in battle off the coast of what is now North Carolina?", 1, "Calico Jack", "Blackbeard", "Bartholomew Roberts", "Captain Kid"));
-    }};*/
+    public static final String TAG = "MainActivity";
+
+    /** The number of questions in a game */
+    public static final int GAME_QUESTION_COUNT = 11;
 
     private final QuestionManager questionManager = new QuestionManager();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,15 +54,8 @@ public class MainActivity extends AppCompatActivity {
         // Make questions 1, 6, and 11 safe money.
         questionManager.setSafeMoneyQuestions(true, 0, 5, 10);
 
-
-        // TEMP - Testing...
-        List<GameQuestion> questions = questionManager.createNextQuestionSet(11);
-
-        for (int i = 0; i < questions.size(); i++) {
-            GameQuestion q = questions.get(i);
-            Log.d("MainActivity", (i + 1) + ": " + q.getDifficulty() + " - " + q.isSafeMoney() + ": " + q.getQuestionText());
-        }
-
+        // Make questions from 1-11 have money values.
+        questionManager.setQuestionValues(1000, 2000, 4000, 8000, 16000, 32000, 64000, 125000, 250000, 500000, 1000000);
     }
 
 
@@ -80,11 +63,29 @@ public class MainActivity extends AppCompatActivity {
      * Called when the "Start Game" button is clicked. Starts the {@link QuestionActivity}.
      */
     public void btnStartGameClicked(View view) {
+        ArrayList<GameQuestion> questions = (ArrayList<GameQuestion>) questionManager.createNextQuestionSet(GAME_QUESTION_COUNT);
+
+
+        // TODO: Temp - Log info about the question set.
+        for (int i = 0; i < questions.size(); i++) {
+            GameQuestion q = questions.get(i);
+
+            // Find the index for the correct answer.
+            int ci = 0;
+            for (ci = 0; ci < q.getAnswers().size(); ci++) {
+                if (q.getAnswers().get(ci).isCorrect())
+                    break;
+            }
+
+            Log.d(TAG, (i + 1) + ": " + q.getDifficulty() + " - " + q.isSafeMoney() + " - " + q.getValue() + " - " + (ci + 1) + " - " + q.getQuestionText());
+        }
+
+
         Intent intent = new Intent(this, QuestionActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
-        //intent.putParcelableArrayListExtra(QuestionActivity.EXTRA_QUESTIONS, questions);
-        //intent.putExtra(QuestionActivity.EXTRA_CURRENT_QUESTION, 0);
+        intent.putParcelableArrayListExtra(QuestionActivity.EXTRA_QUESTIONS, questions);
+        intent.putExtra(QuestionActivity.EXTRA_CURRENT_QUESTION, 0);
 
         startActivity(intent);
     }

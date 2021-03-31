@@ -11,14 +11,28 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * This class represents a valued multiple-choice question. It implements {@link Parcelable} allowing it to be used as an extra for Intents.
+ * This class represents a multiple-choice question.
  */
 public class Question {
 
-    protected final String category;
-    protected final Difficulty difficulty;
-    protected final String questionText;
+    /**
+     * The question category (e.g. General Knowledge) (Note: Currently unused).
+     */
+    protected String category;
 
+    /**
+     * The question difficulty, allows for question sets that increase in difficulty. See {@link QuestionManager#appendDifficultySeq(int, Difficulty)}.
+     */
+    protected Difficulty difficulty;
+
+    /**
+     * The actual question.
+     */
+    protected String questionText;
+
+    /**
+     * The  answers to this question, both correct and incorrect.
+     */
     protected List<Answer> answers;
 
     public Question(String category, Difficulty difficulty, String questionText, List<Answer> answers) {
@@ -28,12 +42,17 @@ public class Question {
         this.answers = answers;
     }
 
+    /**
+     * Create a new question from parsing the provided {@link JSONObject}.
+     *
+     * @throws JSONException if an exception occurs when parsing the {@link JSONObject}.
+     */
     public Question(JSONObject jQuestion) throws JSONException {
         category = jQuestion.getString("category");
         difficulty = Difficulty.valueOfIgnoreCase(jQuestion.getString("difficulty"));
         questionText = jQuestion.getString("question");
 
-        List<Answer> answers = new ArrayList<>();
+        answers = new ArrayList<>();
 
         // Add incorrect answers.
         JSONArray incorrectAnswers = jQuestion.getJSONArray("incorrect_answers");
@@ -48,52 +67,37 @@ public class Question {
 
         Collections.shuffle(answers); // Shuffle answers, preventing the correct answer always being at the bottom of the list.
 
-        this.answers = answers;
     }
-
 
     public String getCategory() {
         return category;
     }
 
+    /**
+     * The question difficulty, allows for question sets that increase in difficulty. See {@link QuestionManager#appendDifficultySeq(int, Difficulty)}.
+     *
+     * @return the question difficulty, allows for question sets that increase in difficulty.
+     */
     public Difficulty getDifficulty() {
         return difficulty;
     }
 
+    /**
+     * The actual question.
+     *
+     * @return the actual question.
+     */
     public String getQuestionText() {
         return questionText;
     }
 
+    /**
+     * The answers to this question, both correct and incorrect.
+     *
+     * @return the answers to this question, both correct and incorrect.
+     */
     public List<Answer> getAnswers() {
         return answers;
     }
 
-
-    /**
-     * @deprecated
-     */
-    public int getCorrectChoice() {
-        return 0;
-    }
-
-    /**
-     * @deprecated
-     */
-    public double getValue() {
-        return 0;
-    }
-
-    /**
-     * @deprecated
-     */
-    public String[] getChoices() {
-        return new String[0];
-    }
-
-    /**
-     * @deprecated
-     */
-    public String getQuestion() {
-        return "";
-    }
 }

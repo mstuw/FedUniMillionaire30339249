@@ -3,6 +3,7 @@
     <string name="game_title">Who Wants to be a Millionaire?</string>
     <string name="btn_start_game">Start Game</string>
     <string name="btn_hot_seat">Hot Seat</string>
+    <string name="btn_highscores">Highscores</string>
     <string name="btnConfirm">Confirm</string>
     <string name="btnReturn">Return to Menu</string>
     <string name="question_format">%1$s</string>

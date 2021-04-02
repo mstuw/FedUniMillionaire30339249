@@ -14,11 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 
 import au.edu.federation.itech3107.fedunimillionaire30339249.data.Difficulty;
 import au.edu.federation.itech3107.fedunimillionaire30339249.data.GameQuestion;
-import au.edu.federation.itech3107.fedunimillionaire30339249.data.Question;
 import au.edu.federation.itech3107.fedunimillionaire30339249.data.QuestionManager;
 
 public class MainActivity extends AppCompatActivity {
@@ -77,6 +75,12 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = createGameActivity(GAME_QUESTION_COUNT);
 
         intent.putExtra(QuestionActivity.EXTRA_GAME_TIMER, GAME_HOT_SEAT_TIMER);
+
+        startActivity(intent);
+    }
+
+    public void btnHighscores(View view){
+        Intent intent = new Intent(this, HighscoresActivity.class);
 
         startActivity(intent);
     }

@@ -38,7 +38,7 @@ public abstract class DataSource<T> implements Closeable {
 
     public abstract boolean update(T t);
 
-    public abstract List<T> getAll();
+    public abstract List<T> getAll(String sortColumn, boolean isAscending);
 
     public abstract boolean delete(T t);
 

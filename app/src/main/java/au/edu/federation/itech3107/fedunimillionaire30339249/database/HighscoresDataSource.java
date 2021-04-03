@@ -40,12 +40,14 @@ public class HighscoresDataSource extends DataSource<Highscore> {
     }
 
     @Override
-    public List<Highscore> getAll() {
+    public List<Highscore> getAll(String sortColumn, boolean isAscending) {
         Log.d(TAG, "Getting all highscores from database!");
 
         List<Highscore> highscores = new ArrayList<>();
 
-        Cursor cursor = database.query(HighscoresOpenHelper.TABLE_NAME, new String[]{"id", "playerName", "moneyWon", "completedOn"}, null, null, null, null, null);
+        String orderBy = sortColumn != null ? (sortColumn + " " + (isAscending ? "ASC" : "DESC")) : null;
+
+        Cursor cursor = database.query(HighscoresOpenHelper.TABLE_NAME, new String[]{"id", "playerName", "moneyWon", "completedOn"}, null, null, null, null, orderBy);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {

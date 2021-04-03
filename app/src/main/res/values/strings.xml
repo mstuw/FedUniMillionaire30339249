@@ -22,4 +22,15 @@
     <string name="game_end_stats_format">You answered %1$d of the %2$d questions correctly.</string>
     <string name="img_desc_bronze_medal">A clip art bronze medal.</string>
     <string name="img_desc_trophy">A clip art gold medal.</string>
+    <string name="action_sort_by">Sort By</string>
+    <string name="action_order_by">Order By</string>
+    <string-array name="arr_sort_by">
+        <item>Name</item>
+        <item>Money Won</item>
+        <item>Completed On</item>
+    </string-array>
+    <string-array name="arr_order_by">
+        <item>Ascending</item>
+        <item>Descending</item>
+    </string-array>
 </resources>

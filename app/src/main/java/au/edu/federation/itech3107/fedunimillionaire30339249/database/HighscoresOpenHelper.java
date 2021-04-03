@@ -10,7 +10,7 @@ public class HighscoresOpenHelper extends SQLiteOpenHelper {
     private static final String TAG = "HighscoresOpenHelper";
 
     public static final String DATABASE_NAME = "fedunimillionaire30339249-highscores";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
 
     public static final String TABLE_NAME = "highscores";
 
@@ -22,7 +22,7 @@ public class HighscoresOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
                 "    id          INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "    playerName  TEXT    UNIQUE" +
+                "    playerName  TEXT    " +
                 "                        NOT NULL," +
                 "    moneyWon    DECIMAL NOT NULL" +
                 "                        DEFAULT (0)," +

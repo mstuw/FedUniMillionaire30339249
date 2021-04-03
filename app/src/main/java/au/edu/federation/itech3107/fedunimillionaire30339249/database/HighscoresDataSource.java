@@ -31,7 +31,7 @@ public class HighscoresDataSource extends DataSource<Highscore> {
 
         Log.d(TAG, "Inserted highscore into database!");
 
-        return true; // TODO: Check if we inserted record into database.
+        return true;
     }
 
     @Override

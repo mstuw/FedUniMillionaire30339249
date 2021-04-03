@@ -34,7 +34,7 @@ public abstract class DataSource<T> implements Closeable {
 
     }
 
-    public abstract void insert(T t);
+    public abstract boolean insert(T t);
 
     public abstract boolean update(T t);
 

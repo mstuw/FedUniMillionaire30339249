@@ -4,8 +4,12 @@
     <string name="btn_start_game">Start Game</string>
     <string name="btn_hot_seat">Hot Seat</string>
     <string name="btn_highscores">Highscores</string>
+    <string name="highscores_entry_label">Name for Highscores:</string>
+    <string name="hint_name">Name</string>
     <string name="btnConfirm">Confirm</string>
     <string name="btnReturn">Return to Menu</string>
+    <string name="btnReturnAndSave">Save and Return</string>
+    <string name="toast_highscore_saved">Highscore saved!</string>
     <string name="question_format">%1$s</string>
     <string name="question_choice_format">%1$s</string>
     <string name="question_progress_format">Question: %1$d of %2$d</string>

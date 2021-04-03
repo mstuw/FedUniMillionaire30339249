@@ -12,7 +12,6 @@
         <activity android:name=".HighscoresActivity" android:parentActivityName=".MainActivity"></activity>
         <activity
             android:name=".GameEndActivity"
-            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".QuestionActivity"

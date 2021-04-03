@@ -21,7 +21,7 @@ public class HighscoresDataSource extends DataSource<Highscore> {
     }
 
     @Override
-    public void insert(Highscore highscore) {
+    public boolean insert(Highscore highscore) {
         ContentValues values = new ContentValues();
         values.put("playerName", highscore.playerName);
         values.put("moneyWon", highscore.moneyWon);
@@ -30,6 +30,8 @@ public class HighscoresDataSource extends DataSource<Highscore> {
         highscore.id = database.insert(HighscoresOpenHelper.TABLE_NAME, null, values);
 
         Log.d(TAG, "Inserted highscore into database!");
+
+        return true; // TODO: Check if we inserted record into database.
     }
 
     @Override

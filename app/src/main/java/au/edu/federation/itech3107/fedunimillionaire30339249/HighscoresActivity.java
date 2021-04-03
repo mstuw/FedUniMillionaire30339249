@@ -1,8 +1,5 @@
 package au.edu.federation.itech3107.fedunimillionaire30339249;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,21 +59,18 @@ public class HighscoresActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.action_order_by:
                 //Toast.makeText(this, "Order by", Toast.LENGTH_SHORT).show();
-                break;
+                return true;
             case R.id.action_sort_by:
                 //Toast.makeText(this, "Sort by", Toast.LENGTH_SHORT).show();
-                break;
+                return true;
 
             default:
-                break;
+                return super.onOptionsItemSelected(item);
         }
-        return true;
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

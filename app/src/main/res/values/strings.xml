@@ -24,6 +24,8 @@
     <string name="img_desc_trophy">A clip art gold medal.</string>
     <string name="action_sort_by">Sort By</string>
     <string name="action_order_by">Order By</string>
+    <string name="delete">Delete</string>
+    <string name="img_desc_highscore_actions">Show context menu for highscore.</string>
     <string-array name="arr_sort_by">
         <item>Name</item>
         <item>Money Won</item>

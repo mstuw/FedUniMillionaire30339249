@@ -21,7 +21,7 @@ import au.edu.federation.itech3107.fedunimillionaire30339249.data.GameQuestion;
 
 public class QuestionActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
 
-    public static final String TAG = "QuestionActivity";
+    private static final String TAG = "QuestionActivity";
 
     public static final String EXTRA_QUESTIONS = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_QUESTIONS";
     public static final String EXTRA_CURRENT_QUESTION = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_CURRENT_QUESTION";

@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class QuestionManager {
-    public static final String TAG = "QuestionManager";
+    private static final String TAG = "QuestionManager";
 
     private static class DifficultyLevel {
         /**

@@ -21,13 +21,13 @@ import au.edu.federation.itech3107.fedunimillionaire30339249.data.QuestionManage
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String TAG = "MainActivity";
+    private static final String TAG = "MainActivity";
 
     /**
      * The number of questions in a game
      */
     public static final int GAME_QUESTION_COUNT = 11;
-    public static final int GAME_HOT_SEAT_TIMER = 15000;
+    public static final int GAME_HOT_SEAT_TIMER = 15000; // The number of milliseconds per question.
 
     private final QuestionManager questionManager = new QuestionManager();
 

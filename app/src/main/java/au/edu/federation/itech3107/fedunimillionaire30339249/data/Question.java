@@ -2,6 +2,7 @@ package au.edu.federation.itech3107.fedunimillionaire30339249.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -90,6 +91,31 @@ public class Question implements Parcelable {
 
         Collections.shuffle(answers); // Shuffle answers, preventing the correct answer always being at the bottom of the list.
 
+    }
+
+    /**
+     * Returns a {@link JSONObject} representing this question. The object is compatible with the constructor {@link #Question(JSONObject)}.
+     *
+     * @return a {@link JSONObject} representing this question.
+     */
+    public JSONObject asJson() throws JSONException {
+        JSONObject obj = new JSONObject();
+        obj.put("category", category);
+        obj.put("difficulty", difficulty.toString().toLowerCase());
+        obj.put("question", questionText);
+
+        JSONArray incorrectAnswers = new JSONArray();
+        for (Answer answer : answers) {
+            if (answer.isCorrect()) {
+                obj.put("correct_answer", answer.getText());
+            } else {
+                incorrectAnswers.put(answer.getText());
+            }
+        }
+
+        obj.put("incorrect_answers", incorrectAnswers);
+
+        return obj;
     }
 
     @Override

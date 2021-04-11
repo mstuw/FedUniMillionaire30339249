@@ -20,7 +20,6 @@ import java.util.stream.Stream;
 public class QuestionManager {
     private static final String TAG = "QuestionManager";
 
-
     private static class DifficultyLevel {
         /**
          * The number of questions before increasing the difficulty level.
@@ -101,6 +100,9 @@ public class QuestionManager {
             Question question = new Question(jQuestions.getJSONObject(i));
             addQuestion(question);
         }
+
+        Log.d(TAG, "Loaded " + jQuestions.length() + " questions...");
+
     }
 
     /**
@@ -186,6 +188,33 @@ public class QuestionManager {
 
         }
         return questionList;
+    }
+
+    /**
+     * Removes all of the questions within the specified list.
+     *
+     * @param questions the questions to remove from this manager.
+     */
+    public void removeAll(List<Question> questions) {
+        for (Question question : questions) {
+            List<Question> questionsOfDifficulty = this.questions.get(question.difficulty);
+            if (questionsOfDifficulty != null)
+                questionsOfDifficulty.remove(question);
+        }
+    }
+
+    public String toJson(Difficulty difficulty) throws JSONException {
+        JSONObject obj = new JSONObject();
+
+        JSONArray questionsArray = new JSONArray();
+        List<Question> questionsOfDifficulty = questions.get(difficulty);
+        if (questionsOfDifficulty != null) {
+            for (Question question : questionsOfDifficulty)
+                questionsArray.put(question.asJson());
+        }
+
+        obj.put("questions", questionsArray);
+        return obj.toString();
     }
 
     public List<Question> getAllQuestions() {

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import au.edu.federation.itech3107.fedunimillionaire30339249.data.Difficulty;
 import au.edu.federation.itech3107.fedunimillionaire30339249.data.GameQuestion;
+import au.edu.federation.itech3107.fedunimillionaire30339249.data.Question;
 import au.edu.federation.itech3107.fedunimillionaire30339249.data.QuestionManager;
 
 public class MainActivity extends AppCompatActivity {
@@ -79,9 +80,16 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void btnHighscores(View view){
+    public void btnHighscoresClicked(View view) {
         Intent intent = new Intent(this, HighscoresActivity.class);
 
+        startActivity(intent);
+    }
+
+    public void btnEditQuestionsClicked(View view) {
+        Intent intent = new Intent(this, QuestionLibraryActivity.class);
+
+        intent.putParcelableArrayListExtra(QuestionLibraryActivity.EXTRA_QUESTIONS, (ArrayList<Question>) questionManager.getAllQuestions());
         startActivity(intent);
     }
 

@@ -49,7 +49,7 @@ public class HighscoresActivity extends AppCompatActivity {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        getMenuInflater().inflate(R.menu.highscores_item_actions_menu, menu); // Long click context menu for list view.
+        getMenuInflater().inflate(R.menu.item_actions_menu, menu); // Long click context menu for list view.
     }
 
     @Override

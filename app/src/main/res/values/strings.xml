@@ -4,6 +4,7 @@
     <string name="btn_start_game">Start Game</string>
     <string name="btn_hot_seat">Hot Seat</string>
     <string name="btn_highscores">Highscores</string>
+    <string name="btn_edit_questions">Manage Questions</string>
     <string name="highscores_entry_label">Name for Highscores:</string>
     <string name="hint_name">Name</string>
     <string name="btnConfirm">Confirm</string>
@@ -24,8 +25,12 @@
     <string name="img_desc_trophy">A clip art gold medal.</string>
     <string name="action_sort_by">Sort By</string>
     <string name="action_order_by">Order By</string>
+    <string name="question_answers">Answers: %1$d</string>
     <string name="delete">Delete</string>
     <string name="img_desc_highscore_actions">Show context menu for highscore.</string>
+    <string name="img_desc_question_actions">Show context menu for question.</string>
+    <string name="questions">Question Library</string>
+    <string name="action_add">Add Question</string>
     <string-array name="arr_sort_by">
         <item>Name</item>
         <item>Money Won</item>

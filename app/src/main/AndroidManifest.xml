@@ -9,7 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FedUniMillionaire30339249">
-        <activity android:name=".HighscoresActivity" android:parentActivityName=".MainActivity"></activity>
+        <activity
+            android:name=".QuestionLibraryActivity"
+            android:parentActivityName=".MainActivity"></activity>
+        <activity
+            android:name=".QuestionEditorActivity"
+            android:parentActivityName=".QuestionLibraryActivity" />
+        <activity
+            android:name=".HighscoresActivity"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".GameEndActivity"
             android:screenOrientation="portrait" />

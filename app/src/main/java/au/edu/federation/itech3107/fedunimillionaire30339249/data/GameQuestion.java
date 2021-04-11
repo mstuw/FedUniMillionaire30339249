@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * This class represents a valued multiple-choice question. It implements {@link Parcelable} allowing it to be used as an extra for Intents.
  */
-public class GameQuestion extends Question implements Parcelable {
+public class GameQuestion extends Question {
 
     public static final Creator<GameQuestion> CREATOR = new Creator<GameQuestion>() {
         @Override
@@ -37,25 +37,14 @@ public class GameQuestion extends Question implements Parcelable {
     }
 
     protected GameQuestion(Parcel in) {
-        super("", Difficulty.EASY, "", null);
-
-        category = in.readString();
-        difficulty = Difficulty.values()[in.readInt()];
-        questionText = in.readString();
-
-        answers = new ArrayList<>();
-        in.readTypedList(answers, Answer.CREATOR);
-
+        super(in);
         isSafeMoney = in.readByte() != 0;
         value = in.readDouble();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(category);
-        dest.writeInt(difficulty.ordinal());
-        dest.writeString(questionText);
-        dest.writeTypedList(answers);
+        super.writeToParcel(dest, flags);
         dest.writeByte((byte) (isSafeMoney ? 1 : 0));
         dest.writeDouble(value);
     }
@@ -67,6 +56,7 @@ public class GameQuestion extends Question implements Parcelable {
 
     /**
      * Returns true if this question is considered "safe money".
+     *
      * @return true if this question is considered "safe money".
      */
     public boolean isSafeMoney() {

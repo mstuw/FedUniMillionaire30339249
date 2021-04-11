@@ -1,5 +1,6 @@
 package au.edu.federation.itech3107.fedunimillionaire30339249.data;
 
+import android.os.Parcel;
 import android.os.Parcelable;
 
 import org.json.JSONObject;
@@ -14,7 +15,19 @@ import java.util.Objects;
 /**
  * This class represents a multiple-choice question.
  */
-public class Question {
+public class Question implements Parcelable {
+
+    public static final Creator<Question> CREATOR = new Creator<Question>() {
+        @Override
+        public Question createFromParcel(Parcel in) {
+            return new Question(in);
+        }
+
+        @Override
+        public Question[] newArray(int size) {
+            return new Question[size];
+        }
+    };
 
     /**
      * The question category (e.g. General Knowledge) (Note: Currently unused).
@@ -43,6 +56,15 @@ public class Question {
         this.answers = answers;
     }
 
+    protected Question(Parcel in) {
+        category = in.readString();
+        difficulty = Difficulty.values()[in.readInt()];
+        questionText = in.readString();
+
+        answers = new ArrayList<>();
+        in.readTypedList(answers, Answer.CREATOR);
+    }
+
     /**
      * Create a new question from parsing the provided {@link JSONObject}.
      *
@@ -68,6 +90,19 @@ public class Question {
 
         Collections.shuffle(answers); // Shuffle answers, preventing the correct answer always being at the bottom of the list.
 
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int i) {
+        dest.writeString(category);
+        dest.writeInt(difficulty.ordinal());
+        dest.writeString(questionText);
+        dest.writeTypedList(answers);
     }
 
     public String getCategory() {

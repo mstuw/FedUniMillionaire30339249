@@ -2,7 +2,7 @@ package au.edu.federation.itech3107.fedunimillionaire30339249.database.data;
 
 import java.util.Date;
 
-
+// No point in having getters/setters as this is a simple DTO.
 public class Highscore {
 
     public long id;

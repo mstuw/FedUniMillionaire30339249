@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import au.edu.federation.itech3107.fedunimillionaire30339249.adapter.QuestionsListAdapter;
 import au.edu.federation.itech3107.fedunimillionaire30339249.data.Question;
 
 public class QuestionLibraryActivity extends AppCompatActivity {
@@ -29,7 +30,6 @@ public class QuestionLibraryActivity extends AppCompatActivity {
     private static final int REQUEST_ADD_QUESTION = 1;
     //private static final int REQUEST_EDIT_QUESTION = 2;
 
-    private List<Question> questions;
     private final List<Question> deletedQuestions = new ArrayList<>(); // A list of questions to be deleted from the question files, returned as a activity result.
     private final List<Question> addedQuestions = new ArrayList<>(); // A list of questions to be added written into the question files, returned as a activity result.
 
@@ -41,9 +41,9 @@ public class QuestionLibraryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_library);
 
-        questions = getIntent().getParcelableArrayListExtra(EXTRA_QUESTIONS);
-
+        List<Question> questions = getIntent().getParcelableArrayListExtra(EXTRA_QUESTIONS);
         questionsAdapter = new QuestionsListAdapter(this, R.layout.question_item, questions);
+
         lvQuestions = findViewById(R.id.lvQuestions);
         lvQuestions.setAdapter(questionsAdapter);
 
@@ -67,6 +67,7 @@ public class QuestionLibraryActivity extends AppCompatActivity {
         }
     }
 
+    // Show the question editor activity for adding a question.
     private void addQuestion() {
         Intent intent = new Intent(this, QuestionEditorActivity.class);
         //  intent.putExtra(QuestionEditorActivity.EXTRA_QUESTION, question); // When editing a question...
@@ -74,12 +75,13 @@ public class QuestionLibraryActivity extends AppCompatActivity {
         startActivityForResult(intent, REQUEST_ADD_QUESTION);
     }
 
+    // Delete the a question at the specified index.
     private void deleteQuestion(int index) {
         Log.d(TAG, "Deleting question item #" + index);
 
         Question question = questionsAdapter.getItem(index);
 
-        deletedQuestions.add(question);
+        deletedQuestions.add(question); // Record the deleted question so we can return it as a result.
 
         questionsAdapter.remove(question);
         questionsAdapter.notifyDataSetInvalidated();
@@ -104,11 +106,11 @@ public class QuestionLibraryActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
+            case android.R.id.home: // Make sure the "back arrow" in the action bar sets the correct return results.
                 setResult();
                 finish();
                 return true;
-            case R.id.action_add:
+            case R.id.action_add: // the plus symbol in the top-right of the action bar.
                 addQuestion();
                 return true;
             default:

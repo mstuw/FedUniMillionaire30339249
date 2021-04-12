@@ -109,6 +109,7 @@ public class QuestionEditorActivity extends AppCompatActivity implements TextWat
         }
     }
 
+    // Show a popup dialog with a text input for adding an incorrect answer.
     public void btnAddIncorrectAnswerClicked(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -128,6 +129,7 @@ public class QuestionEditorActivity extends AppCompatActivity implements TextWat
         builder.show();
     }
 
+    // Set the activity return result, if RESULT_OK add a question extra (EXTRA_QUESTION) representing the question that we are editing/creating.
     private void setResultData(int result) {
         Intent resultIntent = new Intent();
 
@@ -155,7 +157,7 @@ public class QuestionEditorActivity extends AppCompatActivity implements TextWat
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
+            case android.R.id.home: // Make sure the back button in the action bar cancels the edit operation.
                 setResultData(RESULT_CANCELED);
                 finish();
                 return true;
@@ -166,7 +168,7 @@ public class QuestionEditorActivity extends AppCompatActivity implements TextWat
 
     @Override
     public void onBackPressed() {
-        setResultData(RESULT_CANCELED);
+        setResultData(RESULT_CANCELED); // Make sure the back button cancels the edit operation.
         super.onBackPressed();
     }
 

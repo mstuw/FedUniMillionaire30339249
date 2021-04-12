@@ -2,14 +2,16 @@
     <string name="app_name">FedUni Millionaire 30339249</string>
     <string name="game_title">Who Wants to be a Millionaire?</string>
     <string name="btn_start_game">Start Game</string>
+    <string name="btn_cancel">Cancel</string>
     <string name="btn_hot_seat">Hot Seat</string>
     <string name="btn_highscores">Highscores</string>
     <string name="btn_edit_questions">Manage Questions</string>
     <string name="highscores_entry_label">Name for Highscores:</string>
     <string name="hint_name">Name</string>
-    <string name="btnConfirm">Confirm</string>
-    <string name="btnReturn">Return to Menu</string>
-    <string name="btnReturnAndSave">Save and Return</string>
+    <string name="btn_confirm">Confirm</string>
+    <string name="btn_okay">OK</string>
+    <string name="btn_return">Return to Menu</string>
+    <string name="btn_return_and_save">Save and Return</string>
     <string name="toast_highscore_saved">Highscore saved!</string>
     <string name="question_format">%1$s</string>
     <string name="question_choice_format">%1$s</string>
@@ -31,6 +33,17 @@
     <string name="img_desc_question_actions">Show context menu for question.</string>
     <string name="questions">Question Library</string>
     <string name="action_add">Add Question</string>
+    <string name="hint_question">Question?</string>
+    <string name="editor_add_question">New Question</string>
+    <string name="editor_edit_question">Edit Question</string>
+    <string name="editor_confirm_add">Add</string>
+    <string name="editor_confirm_edit">Edit</string>
+    <string name="difficulty">Difficulty:</string>
+    <string name="hint_correct_answer">Answer</string>
+    <string name="incorrect_answers">Incorrect Answers:</string>
+    <string name="img_desc_add_incorrect_answer">Add new incorrect answer.</string>
+    <string name="dialog_add_incorrect_answer_title">Add Incorrect Answer</string>
+    <string name="dialog_add_incorrect_answer_msg">Please enter the incorrect answer...</string>
     <string-array name="arr_sort_by">
         <item>Name</item>
         <item>Money Won</item>

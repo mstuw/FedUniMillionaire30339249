@@ -1,8 +1,5 @@
 package au.edu.federation.itech3107.fedunimillionaire30339249;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,26 +10,31 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.lang.reflect.Array;
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import au.edu.federation.itech3107.fedunimillionaire30339249.data.Question;
-import au.edu.federation.itech3107.fedunimillionaire30339249.database.data.Highscore;
 
 public class QuestionLibraryActivity extends AppCompatActivity {
     private static final String TAG = "QuestionLibraryActivity";
 
-    public static final int RESULT_REFRESH_QUESTIONS = 2;
-
     public static final String EXTRA_QUESTIONS = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_QUESTIONS";
     public static final String EXTRA_DELETED_QUESTIONS = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_DELETED_QUESTIONS";
+    public static final String EXTRA_ADDED_QUESTIONS = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_ADDED_QUESTIONS";
+
+    public static final int RESULT_REFRESH_QUESTIONS = 3;
+
+    private static final int REQUEST_ADD_QUESTION = 1;
+    //private static final int REQUEST_EDIT_QUESTION = 2;
 
     private List<Question> questions;
-    private List<Question> deletedQuestions = new ArrayList<>();
+    private final List<Question> deletedQuestions = new ArrayList<>(); // A list of questions to be deleted from the question files, returned as a activity result.
+    private final List<Question> addedQuestions = new ArrayList<>(); // A list of questions to be added written into the question files, returned as a activity result.
 
     private ListView lvQuestions;
-    private QuestionsListAdapter adapter;
+    private QuestionsListAdapter questionsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,28 +43,46 @@ public class QuestionLibraryActivity extends AppCompatActivity {
 
         questions = getIntent().getParcelableArrayListExtra(EXTRA_QUESTIONS);
 
-        adapter = new QuestionsListAdapter(this, R.layout.question_item, questions);
+        questionsAdapter = new QuestionsListAdapter(this, R.layout.question_item, questions);
         lvQuestions = findViewById(R.id.lvQuestions);
-        lvQuestions.setAdapter(adapter);
+        lvQuestions.setAdapter(questionsAdapter);
 
         registerForContextMenu(lvQuestions);
 
     }
 
-    private void addQuestion() {
-        Log.d(TAG, "Adding question...");
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == REQUEST_ADD_QUESTION && resultCode == RESULT_OK) {
+            Log.d(TAG, "Adding new question....");
+
+            Question question = data.getParcelableExtra(QuestionEditorActivity.EXTRA_QUESTION);
+
+            addedQuestions.add(question);
+
+            questionsAdapter.add(question);
+            questionsAdapter.notifyDataSetInvalidated();
+        }
+    }
+
+    private void addQuestion() {
+        Intent intent = new Intent(this, QuestionEditorActivity.class);
+        //  intent.putExtra(QuestionEditorActivity.EXTRA_QUESTION, question); // When editing a question...
+
+        startActivityForResult(intent, REQUEST_ADD_QUESTION);
     }
 
     private void deleteQuestion(int index) {
         Log.d(TAG, "Deleting question item #" + index);
 
-        Question question = adapter.getItem(index);
+        Question question = questionsAdapter.getItem(index);
 
         deletedQuestions.add(question);
 
-        adapter.remove(question);
-        adapter.notifyDataSetInvalidated();
+        questionsAdapter.remove(question);
+        questionsAdapter.notifyDataSetInvalidated();
     }
 
     // Called when the "three dot" button is clicked for any item in the list view.
@@ -112,6 +132,7 @@ public class QuestionLibraryActivity extends AppCompatActivity {
     private void setResult() {
         Intent resultIntent = new Intent();
         resultIntent.putParcelableArrayListExtra(EXTRA_DELETED_QUESTIONS, (ArrayList<Question>) deletedQuestions);
+        resultIntent.putParcelableArrayListExtra(EXTRA_ADDED_QUESTIONS, (ArrayList<Question>) addedQuestions);
 
         setResult(RESULT_REFRESH_QUESTIONS, resultIntent);
     }

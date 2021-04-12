@@ -96,8 +96,10 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_EDIT_QUESTIONS && resultCode == QuestionLibraryActivity.RESULT_REFRESH_QUESTIONS) {
 
             List<Question> deletedQuestions = data.getParcelableArrayListExtra(QuestionLibraryActivity.EXTRA_DELETED_QUESTIONS);
+            List<Question> addedQuestions = data.getParcelableArrayListExtra(QuestionLibraryActivity.EXTRA_ADDED_QUESTIONS);
 
             questionManager.removeAll(deletedQuestions);
+            questionManager.addAll(addedQuestions);
 
             try {
                 Log.d(TAG,"Saving questions...");

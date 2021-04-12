@@ -24,7 +24,7 @@ public class HighscoresActivity extends AppCompatActivity {
     private static final String TAG = "HighscoresActivity";
 
     private final List<Highscore> highscores = new ArrayList<>();
-    private HighscoresListAdapter adapter;
+    private HighscoresListAdapter highscoresAdapter;
 
     // The current selected item for the "order by" and "sort by" dialogs.
     private int orderBySelection = 0;
@@ -37,9 +37,9 @@ public class HighscoresActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_highscores);
 
-        adapter = new HighscoresListAdapter(this, R.layout.highscores_item, highscores);
+        highscoresAdapter = new HighscoresListAdapter(this, R.layout.highscores_item, highscores);
         lvHighscores = findViewById(R.id.lvHighscores);
-        lvHighscores.setAdapter(adapter);
+        lvHighscores.setAdapter(highscoresAdapter);
 
         // Register list view for long click context menu.
         registerForContextMenu(lvHighscores);
@@ -80,7 +80,7 @@ public class HighscoresActivity extends AppCompatActivity {
 
             highscores.clear();
             highscores.addAll(ds.getAll(sortByColumn, isAscending));
-            adapter.notifyDataSetInvalidated();
+            highscoresAdapter.notifyDataSetInvalidated();
 
         } catch (Exception e) {
             Log.e(TAG, "Failed refreshing highscores!", e);
@@ -94,12 +94,12 @@ public class HighscoresActivity extends AppCompatActivity {
         Log.d(TAG, "Deleting highscore item #" + index);
 
         try (HighscoresDataSource ds = new HighscoresDataSource(this)) {
-            Highscore highscore = adapter.getItem(index);
+            Highscore highscore = highscoresAdapter.getItem(index);
 
             if (ds.delete(highscore)) {
                 // Remove item from list view, if item was successfully removed from database.
-                adapter.remove(highscore);
-                adapter.notifyDataSetInvalidated();
+                highscoresAdapter.remove(highscore);
+                highscoresAdapter.notifyDataSetInvalidated();
             }
 
         } catch (Exception e) {

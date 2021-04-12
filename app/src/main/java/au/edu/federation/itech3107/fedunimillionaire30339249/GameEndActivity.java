@@ -121,7 +121,7 @@ public class GameEndActivity extends AppCompatActivity implements TextWatcher {
     @Override
     public void afterTextChanged(Editable editable) {
         // Change button text depending on if the text box is empty.
-        btnReturn.setText(!editable.toString().trim().isEmpty() ? R.string.btnReturnAndSave : R.string.btnReturn);
+        btnReturn.setText(!editable.toString().trim().isEmpty() ? R.string.btn_return_and_save : R.string.btn_return);
     }
 
 }

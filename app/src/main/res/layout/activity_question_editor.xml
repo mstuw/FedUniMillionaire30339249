@@ -6,42 +6,124 @@
     android:layout_height="match_parent"
     tools:context=".QuestionEditorActivity">
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="291dp"
-        tools:layout_editor_absoluteY="669dp" />
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/editor_add_question"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/etQuestion"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:autofillHints="no"
+        android:ems="10"
+        android:hint="@string/hint_question"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtTitle" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="16dp" />
-
-    <EditText
-        android:id="@+id/editTextTextPersonName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="51dp" />
+        android:layout_marginStart="9dp"
+        android:layout_marginBottom="1dp"
+        android:text="@string/difficulty"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/spinnerDifficulty"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/spinnerDifficulty" />
 
     <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="290dp"
-        android:layout_height="21dp"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="144dp" />
+        android:id="@+id/spinnerDifficulty"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/etQuestion" />
+
+    <EditText
+        android:id="@+id/etCorrectAnswer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:autofillHints="no"
+        android:ems="10"
+        android:hint="@string/hint_correct_answer"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerDifficulty" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/incorrect_answers"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/lvIncorrectAnswers"
+        app:layout_constraintTop_toBottomOf="@+id/etCorrectAnswer" />
+
+    <ImageButton
+        android:id="@+id/ibAddIncorrectAnswer"
+        style="?android:borderlessButtonStyle"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:contentDescription="@string/img_desc_add_incorrect_answer"
+        android:onClick="btnAddIncorrectAnswerClicked"
+        app:layout_constraintBottom_toTopOf="@+id/lvIncorrectAnswers"
+        app:layout_constraintEnd_toEndOf="@+id/lvIncorrectAnswers"
+        app:srcCompat="@drawable/ic_baseline_add_24" />
 
     <ListView
+        android:id="@+id/lvIncorrectAnswers"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        tools:layout_editor_absoluteX="75dp"
-        tools:layout_editor_absoluteY="301dp" />
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/border"
+        app:layout_constraintBottom_toTopOf="@+id/btnConfirmQuestion"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4">
+
+    </ListView>
+
+    <Button
+        android:id="@+id/btnConfirmQuestion"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:onClick="btnConfirmQuestionClicked"
+        android:text="@string/editor_confirm_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

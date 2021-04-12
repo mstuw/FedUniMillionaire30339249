@@ -132,7 +132,7 @@
         android:layout_marginBottom="8dp"
         android:enabled="false"
         android:onClick="btnConfirmClicked"
-        android:text="@string/btnConfirm"
+        android:text="@string/btn_confirm"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

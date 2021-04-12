@@ -1,4 +1,4 @@
-package au.edu.federation.itech3107.fedunimillionaire30339249;
+package au.edu.federation.itech3107.fedunimillionaire30339249.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import au.edu.federation.itech3107.fedunimillionaire30339249.R;
 import au.edu.federation.itech3107.fedunimillionaire30339249.database.data.Highscore;
 
 public class HighscoresListAdapter extends ArrayAdapter<Highscore> {

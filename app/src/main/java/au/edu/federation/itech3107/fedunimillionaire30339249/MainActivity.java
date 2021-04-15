@@ -52,14 +52,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Copy the question files from the read-only assets location to the writable internal storage.
-        if (!doesFileExist(QUESTIONS_EASY) || RESET_QUESTIONS)
-            copyAssetToStorage(QUESTIONS_EASY, QUESTIONS_EASY);
+        if (!Util.doesFileExist(this, QUESTIONS_EASY) || RESET_QUESTIONS)
+            Util.copyAssetToStorage(this, QUESTIONS_EASY, QUESTIONS_EASY);
 
-        if (!doesFileExist(QUESTIONS_MEDIUM) || RESET_QUESTIONS)
-            copyAssetToStorage(QUESTIONS_MEDIUM, QUESTIONS_MEDIUM);
+        if (!Util.doesFileExist(this, QUESTIONS_MEDIUM) || RESET_QUESTIONS)
+            Util.copyAssetToStorage(this, QUESTIONS_MEDIUM, QUESTIONS_MEDIUM);
 
-        if (!doesFileExist(QUESTIONS_HARD) || RESET_QUESTIONS)
-            copyAssetToStorage(QUESTIONS_HARD, QUESTIONS_HARD);
+        if (!Util.doesFileExist(this, QUESTIONS_HARD) || RESET_QUESTIONS)
+            Util.copyAssetToStorage(this, QUESTIONS_HARD, QUESTIONS_HARD);
 
         reloadQuestions();
 
@@ -81,9 +81,9 @@ public class MainActivity extends AppCompatActivity {
         // Load questions for each difficulty level.
         questionManager.clearQuestions();
         try {
-            questionManager.loadQuestions(readAllText(QUESTIONS_EASY));
-            questionManager.loadQuestions(readAllText(QUESTIONS_MEDIUM));
-            questionManager.loadQuestions(readAllText(QUESTIONS_HARD));
+            questionManager.loadQuestions(Util.readAllText(this, QUESTIONS_EASY));
+            questionManager.loadQuestions(Util.readAllText(this, QUESTIONS_MEDIUM));
+            questionManager.loadQuestions(Util.readAllText(this, QUESTIONS_HARD));
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
@@ -106,28 +106,15 @@ public class MainActivity extends AppCompatActivity {
             // Save all the questions within the question manager to internal storage.
             try {
                 Log.d(TAG, "Saving questions...");
-                writeAllText(QUESTIONS_EASY, questionManager.toJson(Difficulty.EASY));
-                writeAllText(QUESTIONS_MEDIUM, questionManager.toJson(Difficulty.MEDIUM));
-                writeAllText(QUESTIONS_HARD, questionManager.toJson(Difficulty.HARD));
+                Util.writeAllText(this, QUESTIONS_EASY, questionManager.toJson(Difficulty.EASY));
+                Util.writeAllText(this, QUESTIONS_MEDIUM, questionManager.toJson(Difficulty.MEDIUM));
+                Util.writeAllText(this, QUESTIONS_HARD, questionManager.toJson(Difficulty.HARD));
             } catch (IOException | JSONException e) {
                 Log.e(TAG, "Failed to save questions!", e);
             }
 
         }
 
-    }
-
-    /**
-     * Returns true if file exists within internal storage.
-     *
-     * @return true if file exists within internal storage.
-     */
-    private boolean doesFileExist(String name) {
-        for (String file : fileList()) {
-            if (file.equals(name))
-                return true;
-        }
-        return false;
     }
 
     /**
@@ -201,63 +188,6 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(QuestionActivity.EXTRA_CURRENT_QUESTION, 0);
 
         return intent;
-    }
-
-    /**
-     * Returns all text from the specified internal storage file.
-     *
-     * @param filepath the internal storage filepath.
-     * @return all text from the specified internal storage file.
-     * @throws IOException an IO exception occurred.
-     */
-    private String readAllText(String filepath) throws IOException {
-        return readAllText(openFileInput(filepath));
-    }
-
-    /**
-     * Writes all the text specified into the specified internal storage file.
-     *
-     * @param filepath the filepath to save the text.
-     * @param text     the string that will be written.
-     * @throws IOException an IO exception occurred.
-     */
-    private void writeAllText(String filepath, String text) throws IOException {
-        try (FileOutputStream fos = openFileOutput(filepath, Context.MODE_PRIVATE)) {
-            fos.write(text.getBytes());
-        }
-    }
-
-    /**
-     * Reads all text from the specified {@link InputStream} and returns a String.
-     *
-     * @param inputStream the {@link InputStream} to read.
-     * @return a string containing all text from the specified {@link InputStream}.
-     * @throws IOException an IO exception occurred.
-     */
-    public static String readAllText(InputStream inputStream) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
-            String line;
-            while ((line = br.readLine()) != null)
-                sb.append(line).append('\n');
-        }
-        return sb.toString();
-    }
-
-    /**
-     * Copies the specified src file from assets and writes it into the specified internal storage location.
-     */
-    private void copyAssetToStorage(String src, String dst) {
-        try (InputStream is = getAssets().open(src)) {
-            try (FileOutputStream fos = openFileOutput(dst, Context.MODE_PRIVATE)) {
-                byte[] buffer = new byte[1024];
-                int len;
-                while ((len = is.read(buffer)) != -1)
-                    fos.write(buffer, 0, len);
-            }
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to copy asset to storage!", e);
-        }
     }
 
 }

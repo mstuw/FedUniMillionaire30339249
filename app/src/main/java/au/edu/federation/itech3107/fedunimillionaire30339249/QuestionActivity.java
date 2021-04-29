@@ -250,7 +250,7 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
                 intent.putExtra(EXTRA_QUESTIONS_ANSWERED_CORRECTLY, questionsAnsweredCorrectly);
                 intent.putExtra(EXTRA_LIFELINE_USED_5050, isLifelineUsed5050);
                 intent.putExtra(EXTRA_LIFELINE_USED_ATA, isLifelineUsedAskTheAudience);
-                //    intent.putExtra(EXTRA_LIFELINE_USED_SWITCH, isLifelineUsedSwitch);
+                intent.putExtra(EXTRA_LIFELINE_USED_SWITCH, isLifelineUsedSwitch);
 
                 if (lifelineQuestions != null)
                     intent.putExtra(EXTRA_LIFELINE_QUESTIONS, lifelineQuestions);

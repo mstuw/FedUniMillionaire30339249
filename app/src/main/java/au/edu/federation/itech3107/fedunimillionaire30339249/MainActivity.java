@@ -164,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private Intent createGameActivity(int questionCount) {
         ArrayList<GameQuestion> questions = (ArrayList<GameQuestion>) questionManager.createNextQuestionSet(questionCount);
+        ArrayList<GameQuestion> lifelineQuestions = (ArrayList<GameQuestion>) questionManager.createNextQuestionSet(questionCount);
 
 
         // TODO: Temp - Log info about the question set.
@@ -185,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
         intent.putParcelableArrayListExtra(QuestionActivity.EXTRA_QUESTIONS, questions);
+        intent.putParcelableArrayListExtra(QuestionActivity.EXTRA_LIFELINE_QUESTIONS, lifelineQuestions);
         intent.putExtra(QuestionActivity.EXTRA_CURRENT_QUESTION, 0);
 
         return intent;

@@ -2,7 +2,6 @@ package au.edu.federation.itech3107.fedunimillionaire30339249.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -10,13 +9,17 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
+import java.util.Set;
 
 /**
  * This class represents a multiple-choice question.
  */
 public class Question implements Parcelable {
+    private static final String TAG = "Question";
 
     public static final Creator<Question> CREATOR = new Creator<Question>() {
         @Override
@@ -92,6 +95,71 @@ public class Question implements Parcelable {
         Collections.shuffle(answers); // Shuffle answers, preventing the correct answer always being at the bottom of the list.
 
     }
+
+    /**
+     * Returns a set of indices containing one correct and one incorrect answer.
+     */
+    public Set<Integer> trimmedAnswers() {
+        Set<Integer> trimmedAnswers = new HashSet<>();
+
+        boolean hasIncorrect = false;
+        boolean hasCorrect = false;
+
+        for (int index = 0; index < answers.size(); index++) {
+            Answer answer = answers.get(index);
+
+            if (answer.isCorrect()) {
+                if (!hasCorrect)
+                    trimmedAnswers.add(index);
+                hasCorrect = true;
+            } else {
+                if (!hasIncorrect)
+                    trimmedAnswers.add(index);
+                hasIncorrect = true;
+            }
+
+            if (hasIncorrect && hasCorrect)
+                break;
+        }
+
+        return trimmedAnswers;
+    }
+
+    /**
+     * Returns a list of random percentages using dynamic weighting depending on question difficulty. Provide set of blacklisted answer indices to ignore, or null.
+     */
+    public List<Float> generatePercentages(Set<Integer> trimmedAnswers) {
+        List<Float> percentages = new ArrayList<>();
+        List<Integer> values = new ArrayList<>();
+        int sum = 0;
+
+        Random r = new Random();
+        for (int index = 0; index < answers.size(); index++) {
+            if (trimmedAnswers != null && !trimmedAnswers.contains(index))
+                continue;
+
+            Answer answer = answers.get(index);
+
+            // Most likely not correct...
+            float weighting = answer.isCorrect() ? difficulty.getCorrectAnswerWeighting() : 1f - difficulty.getCorrectAnswerWeighting();
+
+            int max = (int) (100f * weighting);
+            int min = (int) (max * (1f - difficulty.getSpread()));
+
+            int value = r.nextInt((max - min) + 1) + min;
+
+            sum += value;
+            values.add(value);
+        }
+
+        for (int index = 0; index < values.size(); index++) {
+            float value = ((float) values.get(index) / sum) * 100f;
+            percentages.add(value);
+        }
+
+        return percentages;
+    }
+
 
     /**
      * Returns a {@link JSONObject} representing this question. The object is compatible with the constructor {@link #Question(JSONObject)}.

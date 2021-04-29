@@ -15,6 +15,7 @@
     <string name="toast_highscore_saved">Highscore saved!</string>
     <string name="question_format">%1$s</string>
     <string name="question_choice_format">%1$s</string>
+    <string name="question_choice_audience_format">%1$s - %2$.1f%%</string>
     <string name="question_progress_format">Question: %1$d of %2$d</string>
     <string name="question_playing_for_format">Playing for $%1$,.0f</string>
     <string name="safe_money_format">You have $%1$,.0f</string>
@@ -44,6 +45,9 @@
     <string name="img_desc_add_incorrect_answer">Add new incorrect answer.</string>
     <string name="dialog_add_incorrect_answer_title">Add Incorrect Answer</string>
     <string name="dialog_add_incorrect_answer_msg">Please enter the incorrect answer...</string>
+    <string name="lifeline_5050">50:50</string>
+    <string name="lifeline_ask_the_audience">Ask the Audience</string>
+    <string name="lifeline_switch">Switch</string>
     <string-array name="arr_sort_by">
         <item>Name</item>
         <item>Money Won</item>

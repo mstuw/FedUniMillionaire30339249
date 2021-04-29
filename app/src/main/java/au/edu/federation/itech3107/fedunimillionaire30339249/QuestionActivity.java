@@ -15,6 +15,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import au.edu.federation.itech3107.fedunimillionaire30339249.data.Answer;
 import au.edu.federation.itech3107.fedunimillionaire30339249.data.GameQuestion;
@@ -28,10 +30,17 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
     public static final String EXTRA_SAFE_MONEY = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_SAFE_MONEY";
     public static final String EXTRA_QUESTIONS_ANSWERED_CORRECTLY = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_QUESTIONS_ANSWERED_CORRECTLY";
     public static final String EXTRA_GAME_TIMER = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_GAME_TIMER";
+    public static final String EXTRA_LIFELINE_USED_5050 = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_LIFELINE_USED_5050";
+    public static final String EXTRA_LIFELINE_USED_ATA = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_LIFELINE_USED_ATA";
+    public static final String EXTRA_LIFELINE_USED_SWITCH = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_LIFELINE_USED_SWITCH";
+    public static final String EXTRA_LIFELINE_QUESTIONS = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_LIFELINE_QUESTIONS";
 
     private CountDownTimer timer;
 
     private ArrayList<GameQuestion> questions;
+    private ArrayList<GameQuestion> lifelineQuestions;
+    private GameQuestion currentQuestion;
+
     private int currentQuestionIndex; // The current question index (zero-based).
     private int questionsAnsweredCorrectly; // The number of questions answered correctly.
     private int initialCountdownTime; // The number of milliseconds until the game will end. Zero if disabled.
@@ -39,12 +48,28 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
 
     // Views
     private Button btnConfirm;
+    private Button btnLifeline5050;
+    private Button btnLifelineAskTheAudience;
+    private Button btnLifelineSwitch;
+
     private TextView txtQuestion;
     private TextView txtPlayingFor;
     private TextView txtSafeMoney;
     private TextView txtQuestionProgress;
     private ProgressBar progressBar;
     private RadioGroup rgChoices;
+
+    // True if the lifeline 50:50 was used during the game session.
+    private boolean isLifelineUsed5050;
+
+    // True if the lifeline ask the audience was used during the game session.
+    private boolean isLifelineUsedAskTheAudience;
+
+    // True if the lifeline switch was used during the game session.
+    private boolean isLifelineUsedSwitch;
+
+    private List<Float> percentages = null;
+    private Set<Integer> trimmedAnswers = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +84,10 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
         txtQuestionProgress = findViewById(R.id.txtQuestionProgress);
         progressBar = findViewById(R.id.progressBar);
 
+        btnLifeline5050 = findViewById(R.id.btnLifeline5050);
+        btnLifelineAskTheAudience = findViewById(R.id.btnLifelineAskTheAudience);
+        btnLifelineSwitch = findViewById(R.id.btnLifelineSwitch);
+
         rgChoices = findViewById(R.id.rgChoices);
         rgChoices.setOnCheckedChangeListener(this);
 
@@ -69,6 +98,12 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
         currentSafeMoney = intent.getDoubleExtra(EXTRA_SAFE_MONEY, 0);
         questionsAnsweredCorrectly = intent.getIntExtra(EXTRA_QUESTIONS_ANSWERED_CORRECTLY, 0);
 
+        isLifelineUsed5050 = intent.getBooleanExtra(EXTRA_LIFELINE_USED_5050, false);
+        isLifelineUsedAskTheAudience = intent.getBooleanExtra(EXTRA_LIFELINE_USED_ATA, false);
+        isLifelineUsedSwitch = intent.getBooleanExtra(EXTRA_LIFELINE_USED_SWITCH, false);
+        lifelineQuestions = intent.getParcelableArrayListExtra(EXTRA_LIFELINE_QUESTIONS);
+
+        currentQuestion = questions.get(currentQuestionIndex);
 
         ProgressBar countdownProgressBar = findViewById(R.id.progressBarCountdown);
 
@@ -94,7 +129,7 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
 
         } else { // Hot seat mode disabled.
             initialCountdownTime = 0; // Explicitly set zero, ensuring value doesn't get passed as an extra.
-            countdownProgressBar.setVisibility(View.INVISIBLE);
+            countdownProgressBar.setVisibility(View.GONE);
         }
 
         updateView();
@@ -113,10 +148,8 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
      * Update views to reflect member variables.
      */
     private void updateView() {
-        GameQuestion question = getCurrentQuestion();
-
-        txtQuestion.setText(getString(R.string.question_format, question.getQuestionText()));
-        txtPlayingFor.setText(getString(R.string.question_playing_for_format, question.getValue()));
+        txtQuestion.setText(getString(R.string.question_format, currentQuestion.getQuestionText()));
+        txtPlayingFor.setText(getString(R.string.question_playing_for_format, currentQuestion.getValue()));
         txtSafeMoney.setText(getString(R.string.safe_money_format, currentSafeMoney));
 
         // Update progress information.
@@ -126,19 +159,69 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
 
         // Update question answers.
         rgChoices.removeAllViews();
-        for (int index = 0; index < question.getAnswers().size(); index++) {
-            Answer answer = question.getAnswers().get(index);
+
+
+        // Disable the lifeline 50:50 button if used.
+        btnLifeline5050.setEnabled(!isLifelineUsed5050);
+
+        // Disable the lifeline Ask the Audience button if used.
+        btnLifelineAskTheAudience.setEnabled(!isLifelineUsedAskTheAudience);
+
+        // Disable the lifeline Switch button if used.
+        btnLifelineSwitch.setEnabled(!isLifelineUsedSwitch);
+
+        for (int index = 0; index < currentQuestion.getAnswers().size(); index++) {
+            if (trimmedAnswers != null && !trimmedAnswers.contains(index))
+                continue;
+
+            Answer answer = currentQuestion.getAnswers().get(index);
 
             RadioButton btn = new RadioButton(getApplicationContext());
 
             btn.setTag(index);
             btn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
             btn.setTextColor(getResources().getColor(R.color.black, getTheme()));
-            btn.setText(getString(R.string.question_choice_format, answer.getText()));
+
+            // Get the answer text with audience percentages or just the text.
+            String text = (percentages != null) ?
+                    getString(R.string.question_choice_audience_format, answer.getText(), percentages.get(index))
+                    :
+                    getString(R.string.question_choice_format, answer.getText());
+
+            btn.setText(getString(R.string.question_choice_format, text));
 
             rgChoices.addView(btn);
         }
 
+    }
+
+
+    public void btnLifeline(View view) {
+        switch (view.getId()) {
+            case R.id.btnLifeline5050:
+                isLifelineUsed5050 = true;
+
+                trimmedAnswers = currentQuestion.trimmedAnswers();
+
+                updateView();
+                break;
+            case R.id.btnLifelineAskTheAudience:
+                isLifelineUsedAskTheAudience = true;
+
+                percentages = currentQuestion.generatePercentages(trimmedAnswers);
+
+                updateView();
+                break;
+            case R.id.btnLifelineSwitch:
+                if (lifelineQuestions != null) {
+                    isLifelineUsedSwitch = true;
+                    currentQuestion = lifelineQuestions.get(currentQuestionIndex);
+                    updateView();
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     public void btnConfirmClicked(View view) {
@@ -148,13 +231,11 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
         RadioButton checkedAnswer = findViewById(rgChoices.getCheckedRadioButtonId());
         int checkedIndex = (int) checkedAnswer.getTag();
 
-        GameQuestion question = getCurrentQuestion();
-
-        if (question.getAnswers().get(checkedIndex).isCorrect()) { // Answer was correct.
+        if (currentQuestion.getAnswers().get(checkedIndex).isCorrect()) { // Answer was correct.
             questionsAnsweredCorrectly++;
 
-            if (question.isSafeMoney())
-                currentSafeMoney = question.getValue();
+            if (currentQuestion.isSafeMoney())
+                currentSafeMoney = currentQuestion.getValue();
 
             if (currentQuestionIndex == questions.size() - 1) { // Reached the end of the questions. User has won.
                 endGame();
@@ -167,6 +248,12 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
                 intent.putExtra(EXTRA_CURRENT_QUESTION, currentQuestionIndex + 1);
                 intent.putExtra(EXTRA_SAFE_MONEY, currentSafeMoney);
                 intent.putExtra(EXTRA_QUESTIONS_ANSWERED_CORRECTLY, questionsAnsweredCorrectly);
+                intent.putExtra(EXTRA_LIFELINE_USED_5050, isLifelineUsed5050);
+                intent.putExtra(EXTRA_LIFELINE_USED_ATA, isLifelineUsedAskTheAudience);
+                //    intent.putExtra(EXTRA_LIFELINE_USED_SWITCH, isLifelineUsedSwitch);
+
+                if (lifelineQuestions != null)
+                    intent.putExtra(EXTRA_LIFELINE_QUESTIONS, lifelineQuestions);
 
                 if (initialCountdownTime > 0)
                     intent.putExtra(EXTRA_GAME_TIMER, initialCountdownTime);
@@ -179,13 +266,6 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
             endGame();
         }
 
-    }
-
-    /**
-     * @return The current question this activity should be displaying / handling.
-     */
-    private GameQuestion getCurrentQuestion() {
-        return questions.get(currentQuestionIndex);
     }
 
     /**

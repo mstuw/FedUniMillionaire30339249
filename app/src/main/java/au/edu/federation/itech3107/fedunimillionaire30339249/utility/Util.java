@@ -1,4 +1,4 @@
-package au.edu.federation.itech3107.fedunimillionaire30339249;
+package au.edu.federation.itech3107.fedunimillionaire30339249.utility;
 
 import android.content.Context;
 import android.util.Log;

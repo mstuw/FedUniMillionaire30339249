@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="au.edu.federation.itech3107.fedunimillionaire30339249">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,11 +14,11 @@
         android:theme="@style/Theme.FedUniMillionaire30339249">
         <activity
             android:name=".QuestionLibraryActivity"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".QuestionEditorActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".QuestionLibraryActivity" />
+            android:parentActivityName=".QuestionLibraryActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".HighscoresActivity"
             android:parentActivityName=".MainActivity" />

@@ -10,7 +10,7 @@ public class HighscoresOpenHelper extends SQLiteOpenHelper {
     private static final String TAG = "HighscoresOpenHelper";
 
     public static final String DATABASE_NAME = "fedunimillionaire30339249-highscores";
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
 
     public static final String TABLE_NAME = "highscores";
 
@@ -26,7 +26,10 @@ public class HighscoresOpenHelper extends SQLiteOpenHelper {
                 "                        NOT NULL," +
                 "    moneyWon    DECIMAL NOT NULL" +
                 "                        DEFAULT (0)," +
-                "    completedOn INTEGER NOT NULL" +
+                "    completedOn INTEGER NOT NULL," +
+                "    lat         DECIMAL NOT NULL," +
+                "    lng         DECIMAL NOT NULL," +
+                "    hasLocation INTEGER NOT NULL DEFAULT (1)" +
                 ");");
     }
 

@@ -26,6 +26,9 @@ public class HighscoresDataSource extends DataSource<Highscore> {
         values.put("playerName", highscore.playerName);
         values.put("moneyWon", highscore.moneyWon);
         values.put("completedOn", highscore.completedOn.getTime());
+        values.put("lat", highscore.lat);
+        values.put("lng", highscore.lng);
+        values.put("hasLocation", highscore.hasLocation ? 1 : 0);
 
         highscore.id = database.insert(HighscoresOpenHelper.TABLE_NAME, null, values);
 
@@ -47,7 +50,7 @@ public class HighscoresDataSource extends DataSource<Highscore> {
 
         String orderBy = sortColumn != null ? (sortColumn + " " + (isAscending ? "ASC" : "DESC")) : null;
 
-        Cursor cursor = database.query(HighscoresOpenHelper.TABLE_NAME, new String[]{"id", "playerName", "moneyWon", "completedOn"}, null, null, null, null, orderBy);
+        Cursor cursor = database.query(HighscoresOpenHelper.TABLE_NAME, new String[]{"id", "playerName", "moneyWon", "completedOn", "lat", "lng", "hasLocation"}, null, null, null, null, orderBy);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -57,6 +60,10 @@ public class HighscoresDataSource extends DataSource<Highscore> {
             highscore.playerName = cursor.getString(1);
             highscore.moneyWon = cursor.getDouble(2);
             highscore.completedOn = new Date(cursor.getLong(3));
+
+            highscore.lat = cursor.getDouble(4);
+            highscore.lng = cursor.getDouble(5);
+            highscore.hasLocation = cursor.getInt(6) != 0;
 
             highscores.add(highscore);
 

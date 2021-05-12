@@ -48,6 +48,9 @@
     <string name="lifeline_5050">50:50</string>
     <string name="lifeline_ask_the_audience">Ask the Audience</string>
     <string name="lifeline_switch">Switch</string>
+    <string name="toast_highscore_permission_denied">Saving highscore without location! Permission denied!</string>
+    <string name="perm_rationale_location">By granting location permissions, your highscores will appear on the world map.</string>
+    <string name="show_in_map">Show in Map</string>
     <string-array name="arr_sort_by">
         <item>Name</item>
         <item>Money Won</item>

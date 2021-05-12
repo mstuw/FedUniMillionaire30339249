@@ -13,4 +13,10 @@ public class Highscore {
 
     public Date completedOn;
 
+    public boolean hasLocation;
+
+    public double lat;
+
+    public double lng;
+
 }

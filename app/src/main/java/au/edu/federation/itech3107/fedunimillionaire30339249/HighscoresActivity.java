@@ -13,6 +13,13 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +27,9 @@ import au.edu.federation.itech3107.fedunimillionaire30339249.adapter.HighscoresL
 import au.edu.federation.itech3107.fedunimillionaire30339249.database.HighscoresDataSource;
 import au.edu.federation.itech3107.fedunimillionaire30339249.database.data.Highscore;
 
-public class HighscoresActivity extends AppCompatActivity {
+public class HighscoresActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    private static final float SHOW_IN_MAP_ZOOM_LEVEL = 18;
 
     private static final String TAG = "HighscoresActivity";
 
@@ -33,10 +42,16 @@ public class HighscoresActivity extends AppCompatActivity {
 
     private ListView lvHighscores;
 
+    private GoogleMap googleMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_highscores);
+
+        // Load the Google Map fragment.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
         highscoresAdapter = new HighscoresListAdapter(this, R.layout.highscores_item, highscores);
         lvHighscores = findViewById(R.id.lvHighscores);
@@ -49,8 +64,37 @@ public class HighscoresActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onMapReady(GoogleMap map) {
+        googleMap = map;
+
+        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        map.setIndoorEnabled(false);
+
+        // Default map location
+        LatLng markerPosition = new LatLng(-37.626044, 143.891659);
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPosition, 15));
+
+        // Add map markers for highscores.
+        try (HighscoresDataSource ds = new HighscoresDataSource(this)) {
+            List<Highscore> list = ds.getAll(null, false);
+
+            for (Highscore highscore : list) {
+                if (!highscore.hasLocation)
+                    continue;
+
+                LatLng latLng = new LatLng(highscore.lat, highscore.lng);
+                map.addMarker(new MarkerOptions().position(latLng).title(highscore.playerName));
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, "Failed creating highscore markers!", e);
+        }
+
+    }
+
+    @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        getMenuInflater().inflate(R.menu.item_actions_menu, menu); // Long click context menu for list view.
+        getMenuInflater().inflate(R.menu.item_highscore_actions_menu, menu); // Long click context menu for list view.
     }
 
     @Override
@@ -110,6 +154,17 @@ public class HighscoresActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Pan the map to the given highscore location.
+     */
+    private void showInMap(int index) {
+        Highscore highscore = highscoresAdapter.getItem(index);
+        if (highscore != null && highscore.hasLocation) {
+            LatLng position = new LatLng(highscore.lat, highscore.lng);
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, SHOW_IN_MAP_ZOOM_LEVEL));
+        }
+    }
+
     // Called when the "three dot" button is clicked for any item in the list view.
     public void showItemPopup(View view) {
         lvHighscores.showContextMenuForChild(view);
@@ -165,10 +220,12 @@ public class HighscoresActivity extends AppCompatActivity {
             case R.id.action_delete:
                 deleteHighscore(info.position);
                 return true;
+            case R.id.action_show_in_map:
+                showInMap(info.position);
+                return true;
             default:
                 return super.onContextItemSelected(item);
         }
     }
-
 
 }

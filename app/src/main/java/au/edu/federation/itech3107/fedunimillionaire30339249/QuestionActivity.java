@@ -44,7 +44,7 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
     public static final String EXTRA_LIFELINE_QUESTIONS = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_LIFELINE_QUESTIONS";
 
     private static final float SHUFFLE_SHAKE_THRESHOLD = 13.0f;
-    private static final float SHUFFLE_SHAKE_SENSITIVITY = 0.8f; // between >0.0 and <1.0
+    private static final float SHUFFLE_SHAKE_SENSITIVITY = 0.7f; // between >0.0 and <1.0
 
     private CountDownTimer timer;
     private SensorManager sensorManager;

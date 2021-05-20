@@ -1,6 +1,10 @@
 package au.edu.federation.itech3107.fedunimillionaire30339249;
 
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -11,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,7 +26,10 @@ import java.util.Set;
 import au.edu.federation.itech3107.fedunimillionaire30339249.data.Answer;
 import au.edu.federation.itech3107.fedunimillionaire30339249.data.GameQuestion;
 
-public class QuestionActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
+// Explore sensor use ---
+// Accelerometer used for shuffling question answers when a shake is detected. See the QuestionActivity class for implementation. Lines 149, 163, and 326.
+
+public class QuestionActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener, SensorEventListener {
 
     private static final String TAG = "QuestionActivity";
 
@@ -35,7 +43,11 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
     public static final String EXTRA_LIFELINE_USED_SWITCH = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_LIFELINE_USED_SWITCH";
     public static final String EXTRA_LIFELINE_QUESTIONS = "au.edu.federation.itech3107.fedunimillionaire30339249.EXTRA_LIFELINE_QUESTIONS";
 
+    private static final float SHUFFLE_SHAKE_THRESHOLD = 13.0f;
+    private static final float SHUFFLE_SHAKE_SENSITIVITY = 0.8f; // between >0.0 and <1.0
+
     private CountDownTimer timer;
+    private SensorManager sensorManager;
 
     private ArrayList<GameQuestion> questions;
     private ArrayList<GameQuestion> lifelineQuestions;
@@ -71,10 +83,16 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
     private List<Float> percentages = null;
     private Set<Integer> trimmedAnswers = null;
 
+    private float acceleration;
+    private float previousAcceleration;
+    private float shakeAcceleration;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
+
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         // Find views.
         btnConfirm = findViewById(R.id.btnConfirm);
@@ -136,13 +154,33 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Register the accel sensor for the shaking gesture, only if one exists.
+        Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        if (sensor != null) {
+            acceleration = SensorManager.GRAVITY_EARTH;
+            previousAcceleration = SensorManager.GRAVITY_EARTH;
+            shakeAcceleration = 0f;
+
+            sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
+
+        // Unregister the accel sensor when paused to conserve battery.
+        sensorManager.unregisterListener(this);
+
         if (timer != null) {
             timer.cancel();
             Log.d(TAG, "Stopping countdown timer...");
         }
     }
+
 
     /**
      * Update views to reflect member variables.
@@ -284,6 +322,37 @@ public class QuestionActivity extends AppCompatActivity implements RadioGroup.On
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int i) {
         btnConfirm.setEnabled(true);
+    }
+
+    // Use the accelerometer to shuffle question answers when a shake is detected.
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        float ax = sensorEvent.values[0]; // accel x
+        float ay = sensorEvent.values[1]; // accel y
+        float az = sensorEvent.values[2]; // accel z
+
+        previousAcceleration = acceleration;
+        acceleration = (float) Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2) + Math.pow(az, 2));
+
+        float delta = acceleration - previousAcceleration;
+
+        // prevent small high-acceleration shakes from triggering shake detection.
+        // delta must be higher than what shake acceleration will decay at.
+        shakeAcceleration = shakeAcceleration * SHUFFLE_SHAKE_SENSITIVITY + delta;
+
+        // Shuffle question answers, if acceleration is above threshold.
+        if (shakeAcceleration > SHUFFLE_SHAKE_THRESHOLD) {
+            currentQuestion.shuffleAnswers();
+            updateView();
+
+            // Inform user of shuffle.
+            Toast.makeText(this, getString(R.string.shuffle_shake_msg), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
     }
 
 }

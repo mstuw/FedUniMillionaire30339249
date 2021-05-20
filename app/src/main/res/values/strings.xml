@@ -51,6 +51,7 @@
     <string name="toast_highscore_permission_denied">Saving highscore without location! Permission denied!</string>
     <string name="perm_rationale_location">By granting location permissions, your highscores will appear on the world map.</string>
     <string name="show_in_map">Show in Map</string>
+    <string name="shuffle_shake_msg">Question answers shuffled!</string>
     <string-array name="arr_sort_by">
         <item>Name</item>
         <item>Money Won</item>

@@ -92,8 +92,14 @@ public class Question implements Parcelable {
         String correctAnswer = jQuestion.getString("correct_answer");
         answers.add(new Answer(correctAnswer, true));
 
-        Collections.shuffle(answers); // Shuffle answers, preventing the correct answer always being at the bottom of the list.
+        shuffleAnswers(); // Shuffle answers, preventing the correct answer always being at the bottom of the list.
+    }
 
+    /**
+     * Shuffle the answers for this question. (The item order)
+     */
+    public void shuffleAnswers() {
+        Collections.shuffle(answers);
     }
 
     /**

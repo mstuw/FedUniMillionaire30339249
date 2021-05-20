@@ -23,6 +23,9 @@ import au.edu.federation.itech3107.fedunimillionaire30339249.data.api.QuestionAp
 import au.edu.federation.itech3107.fedunimillionaire30339249.data.QuestionManager;
 import au.edu.federation.itech3107.fedunimillionaire30339249.utility.Util;
 
+// Explore sensor use ---
+// Accelerometer used for shuffling question answers when a shake is detected. See the QuestionActivity class for implementation. Lines 149, 163, and 326.
+
 public class MainActivity extends AppCompatActivity implements IQuestionSetCallback {
     private static final boolean RESET_QUESTIONS = false; // If true, the original questions from assets will overwrite the user-modified questions. Used during development.
 
